@@ -1,0 +1,32 @@
+{% extends "shared/dashboard_base.html" %}
+{% block title %}Report Sighting — Komodo Hub{% endblock %}
+{% set sidebar_label = 'Community' %}
+{% block sidebar_links %}
+<a href="{{ url_for('community.dashboard') }}" class="nav-item">Overview</a>
+<a href="{{ url_for('community.report_sighting') }}" class="nav-item active">Report Sighting</a>
+<a href="{{ url_for('community.library') }}" class="nav-item">Library</a>
+<a href="{{ url_for('community.accesscodes') }}" class="nav-item">Access Codes</a>
+{% endblock %}
+{% block dash_content %}
+<div class="dash-header"><div><div class="dash-title">Report a Sighting</div><div class="dash-subtitle">Contribute to Indonesia's conservation database</div></div></div>
+<div class="card" style="max-width:640px">
+  <form method="POST">
+    <div class="form-group"><label>Title</label><input type="text" name="title" placeholder="e.g. Javan Rhino near Ciujung River" required></div>
+    <div class="form-group">
+      <label>Species</label>
+      <select name="species_id" required>
+        <option value="">Select species…</option>
+        {% for sp in species_list %}
+        <option value="{{ sp.id }}">{{ sp.common_name }} ({{ sp.scientific_name }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group"><label>Location</label><input type="text" name="location" placeholder="e.g. Ujung Kulon National Park"></div>
+    <div class="form-group"><label>Notes</label><textarea name="notes" rows="4" placeholder="Describe what you observed…" style="resize:vertical"></textarea></div>
+    <div style="display:flex;gap:12px">
+      <button type="submit" class="btn btn-primary" style="background:var(--komodo-green)">Submit Report →</button>
+      <a href="{{ url_for('community.dashboard') }}" class="btn btn-ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

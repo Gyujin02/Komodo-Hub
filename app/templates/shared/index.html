@@ -1,0 +1,142 @@
+{% extends "shared/base.html" %}
+{% block title %}Komodo Hub — Indonesia's Conservation Platform{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-inner" style="grid-template-columns:1fr;max-width:720px">
+    <div style="text-align:center">
+      <div class="hero-badge"><span class="hero-badge-dot"></span>Yayasan Komodo Initiative</div>
+      <h1>Protect Indonesia's<br><em>Endangered Species</em><br>Together</h1>
+      <p class="hero-desc">
+        Komodo Hub connects schools and communities across Indonesia in the conservation of endangered endemic species.
+        Join us in protecting the Javan Rhinoceros, Sumatran Tiger, and more.
+      </p>
+      <div class="hero-ctas" style="justify-content:center">
+        <a href="{{ url_for('auth.register_school') }}" class="btn btn-white btn-large">Register School</a>
+        <a href="{{ url_for('auth.join') }}" class="btn btn-outline-white btn-large">Join with Code</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Bar -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-num">{{ stats.schools }}</div><div class="stat-label">Active Schools</div></div>
+      <div class="stat-item"><div class="stat-num">{{ stats.communities }}</div><div class="stat-label">Communities</div></div>
+      <div class="stat-item"><div class="stat-num">{{ stats.sightings }}</div><div class="stat-label">Sighting Reports</div></div>
+      <div class="stat-item"><div class="stat-num">{{ stats.species }}</div><div class="stat-label">Species Tracked</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Featured Species from case study -->
+<section>
+  <div class="container">
+    <div class="section-label">Featured Species</div>
+    <div class="section-title">Indonesia's Endangered Endemic Species</div>
+    <p style="color:var(--gray-600);font-size:15px;font-weight:300;margin-bottom:48px">
+      Komodo Hub tracks and protects Indonesia's most at-risk species. Schools and communities contribute sighting reports to our national conservation database.
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:40px">
+      {% set colors = {
+        'Critically Endangered':'#dc2626',
+        'Endangered':'#d97706',
+        'Vulnerable':'#0369a1'
+      } %}
+      {% for sp in featured %}
+      <div class="card" style="border-top:3px solid {{ colors.get(sp.conservation_status,'#999') }}">
+        
+        <div class="card-title" style="font-size:14px">{{ sp.common_name }}</div>
+        <div class="card-meta" style="font-style:italic;font-size:11px">{{ sp.scientific_name }}</div>
+        <span class="badge" style="margin-top:8px;background:{{ colors.get(sp.conservation_status,'#999') }}20;color:{{ colors.get(sp.conservation_status,'#999') }};font-size:10px">
+          {{ sp.conservation_status }}
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+    <div style="text-align:center">
+      <a href="{{ url_for('main.species') }}" class="btn btn-primary">View All Species →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Who We Serve -->
+<section style="background:var(--off-white)">
+  <div class="container">
+    <div class="section-label">Who We Serve</div>
+    <div class="section-title">Three portals, one platform</div>
+    <div class="who-grid">
+      <div class="who-card school">
+        
+        <div class="wc-tag">Schools</div>
+        <div class="wc-title">School Portal</div>
+        <div class="wc-desc">
+          Principals register their school and subscribe. School admins generate access codes for teachers and students.
+          Teachers create conservation programs and activities. Students submit work — all private from the public.
+        </div>
+        <a href="{{ url_for('auth.register_school') }}" class="wc-btn">Register School →</a>
+      </div>
+      <div class="who-card community">
+        
+        <div class="wc-tag">Communities</div>
+        <div class="wc-title">Community Hub</div>
+        <div class="wc-desc">
+          Community organisations like #SaveOurAnimals register and contribute articles, essays, and wildlife sighting reports.
+          Member profiles and contributions are publicly visible to showcase conservation work.
+        </div>
+        <a href="{{ url_for('auth.register_community') }}" class="wc-btn">Join as Community →</a>
+      </div>
+      <div class="who-card foundation">
+        
+        <div class="wc-tag">Foundation</div>
+        <div class="wc-title">Yayasan Komodo</div>
+        <div class="wc-desc">
+          Yayasan Komodo approves school and community registrations, monitors the platform via the business dashboard,
+          and maintains full audit logs of all system actions.
+        </div>
+        <a href="{{ url_for('auth.login') }}" class="wc-btn">Admin Login →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-bg">
+  <div class="container">
+    <div class="section-label" style="color:#00b4d8">How It Works</div>
+    <div class="section-title" style="color:white">From registration to conservation</div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Register & Get Approved</div>
+        <div class="step-desc">School principal registers the school. Yayasan Komodo reviews and approves — the school becomes active on the platform.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Issue Access Codes</div>
+        <div class="step-desc">School admin generates unique access codes for teachers and students. Community admin creates codes for community members.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Create Programs</div>
+        <div class="step-desc">Teachers create conservation programs and activities — field studies, essays, sighting logs. Students access and submit their work.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Contribute to Conservation</div>
+        <div class="step-desc">Students and community members report endangered species sightings. School library published publicly — student profiles always private.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-bottom" style="justify-content:center">
+      <span>© 2025 Komodo Hub — Yayasan Komodo. A Digital Platform for Community-Supported Animal Conservation.</span>
+    </div>
+  </div>
+</footer>
+{% endblock %}

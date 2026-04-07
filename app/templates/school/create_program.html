@@ -1,0 +1,25 @@
+{% extends "shared/dashboard_base.html" %}
+{% block title %}Create Program — Komodo Hub{% endblock %}
+{% set sidebar_label = 'School' %}
+{% block sidebar_links %}
+<a href="{{ url_for('school.dashboard') }}" class="nav-item">Overview</a>
+<a href="{{ url_for('school.create_program') }}" class="nav-item active">New Program</a>
+<a href="{{ url_for('school.submissions') }}" class="nav-item">Submissions</a>
+<a href="{{ url_for('school.messages') }}" class="nav-item">Messages</a>
+<a href="{{ url_for('school.accesscodes') }}" class="nav-item">Access Codes</a>
+{% endblock %}
+{% block dash_content %}
+<div class="dash-header">
+  <div><div class="dash-title">Create Program</div><div class="dash-subtitle">Build a conservation learning program for your students</div></div>
+</div>
+<div class="card" style="max-width:640px">
+  <form method="POST" action="{{ url_for('school.create_program') }}">
+    <div class="form-group"><label>Program Title</label><input type="text" name="title" placeholder="e.g. Javan Rhinoceros Conservation" required></div>
+    <div class="form-group"><label>Description</label><textarea name="description" rows="4" placeholder="Describe the program goals and content…" style="resize:vertical"></textarea></div>
+    <div style="display:flex;gap:12px">
+      <button type="submit" class="btn btn-primary">Create Program →</button>
+      <a href="{{ url_for('school.dashboard') }}" class="btn btn-ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

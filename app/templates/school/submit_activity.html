@@ -1,0 +1,33 @@
+{% extends "shared/dashboard_base.html" %}
+{% block title %}Submit Work — Komodo Hub{% endblock %}
+{% set sidebar_label = 'School' %}
+{% block sidebar_links %}
+<a href="{{ url_for('school.dashboard') }}" class="nav-item active">Overview</a>
+<a href="{{ url_for('school.submissions') }}" class="nav-item">My Submissions</a>
+<a href="{{ url_for('school.messages') }}" class="nav-item">Messages</a>
+{% endblock %}
+{% block dash_content %}
+<div class="dash-header">
+  <div><div class="dash-title">Submit Work</div><div class="dash-subtitle">{{ activity.title }}</div></div>
+</div>
+<div class="card" style="max-width:640px">
+  <div class="notice-banner notice-info" style="margin-bottom:20px">
+    Your submission is <strong>SENSITIVE</strong> — only visible to your teacher and school admin.
+  </div>
+  {% if activity.content %}
+  <div style="background:var(--off-white);border-radius:8px;padding:16px;margin-bottom:20px;font-size:14px">
+    <strong>Instructions:</strong><br>{{ activity.content }}
+  </div>
+  {% endif %}
+  <form method="POST">
+    <div class="form-group">
+      <label>Your Submission</label>
+      <textarea name="content" rows="8" placeholder="Write your response, findings, or observations here…" required style="resize:vertical"></textarea>
+    </div>
+    <div style="display:flex;gap:12px">
+      <button type="submit" class="btn btn-primary">Submit Work →</button>
+      <a href="{{ url_for('school.dashboard') }}" class="btn btn-ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

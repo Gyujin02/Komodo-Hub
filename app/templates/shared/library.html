@@ -1,0 +1,26 @@
+{% extends "shared/base.html" %}
+{% block title %}Public Library — Komodo Hub{% endblock %}
+{% block content %}
+<div style="padding-top:68px">
+<section>
+  <div class="container">
+    <div class="section-label">Public Library</div>
+    <div class="section-title">Conservation Resources</div>
+    <p style="color:var(--gray-600);font-size:15px;margin-bottom:40px">Public content only — student profiles are never accessible.</p>
+    {% if items %}
+    <div style="display:grid;gap:16px">
+      {% for item in items %}
+      <div class="card">
+        <div class="card-title">{{ item.title }}</div>
+        <div class="card-meta"><span class="badge badge-community">{{ item.type }}</span> <span style="font-size:11px;color:var(--komodo-green);margin-left:6px">Public</span></div>
+        <div class="card-desc" style="margin-top:8px">{{ item.content }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">
+    {% endif %}
+  </div>
+</section>
+</div>
+{% endblock %}

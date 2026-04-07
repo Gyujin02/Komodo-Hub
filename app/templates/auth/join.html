@@ -1,0 +1,32 @@
+{% extends "shared/base.html" %}
+{% block title %}Join — Komodo Hub{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="auth-left">
+      <div>
+        <div class="auth-left-logo"><div class="nav-logo-mark">KH</div><span class="nav-logo-text">Komodo Hub</span></div>
+        <h2>Join with Access Code</h2>
+        <p style="margin-bottom:40px">Enter the access code given to you by your school or community admin.</p>
+        <div class="auth-feature-list">
+          <div class="auth-feature"><div class="auth-feature-text">Access code verified by system</div></div>
+          <div class="auth-feature"><div class="auth-feature-text">Role assigned automatically</div></div>
+          <div class="auth-feature"><div class="auth-feature-text">All actions audit-logged</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <h3>Join Komodo Hub</h3>
+      <p class="auth-sub">Use your access code to register</p>
+      <form method="POST">
+        <div class="form-group"><label>Display Name</label><input type="text" name="display_name" placeholder="Your name" required></div>
+        <div class="form-group"><label>Email</label><input type="email" name="email" required></div>
+        <div class="form-group"><label>Password</label><input type="password" name="password" placeholder="Min 6 characters" required></div>
+        <div class="form-group"><label>Access Code</label><input type="text" name="access_code" placeholder="Enter your access code" required></div>
+        <button type="submit" class="btn btn-primary btn-full">Join Now →</button>
+      </form>
+      <p class="auth-link">Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

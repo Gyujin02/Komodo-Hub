@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Komodo Hub{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="{{ url_for('main.index') }}">
+      <div class="nav-logo-mark">KH</div>
+      <span class="nav-logo-text">Komodo Hub</span>
+    </a>
+    <div class="nav-links">
+      <a href="{{ url_for('main.index') }}" class="nav-link">Home</a>
+      <a href="{{ url_for('main.schools') }}" class="nav-link">Schools</a>
+      <a href="{{ url_for('main.communities') }}" class="nav-link">Communities</a>
+      <a href="{{ url_for('main.species') }}" class="nav-link">Species</a>
+      <a href="{{ url_for('main.public_library') }}" class="nav-link">Library</a>
+    </div>
+    <div class="nav-actions">
+      {% if current_user.is_authenticated %}
+        <span class="nav-user-label">{{ current_user.display_name }}</span>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-ghost btn-sm">Logout</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-ghost">Log In</a>
+        <a href="{{ url_for('auth.register_school') }}" class="btn btn-primary">Get Started</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-wrap">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+</body>
+</html>

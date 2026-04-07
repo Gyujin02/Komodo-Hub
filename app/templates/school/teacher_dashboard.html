@@ -1,0 +1,54 @@
+{% extends "shared/dashboard_base.html" %}
+{% block title %}Teacher Dashboard — Komodo Hub{% endblock %}
+{% set sidebar_label = 'School' %}
+{% block sidebar_links %}
+<a href="{{ url_for('school.dashboard') }}" class="nav-item active">Overview</a>
+<a href="{{ url_for('school.create_program') }}" class="nav-item">New Program</a>
+<a href="{{ url_for('school.submissions') }}" class="nav-item">Submissions</a>
+<a href="{{ url_for('school.messages') }}" class="nav-item">Messages</a>
+<a href="{{ url_for('school.accesscodes') }}" class="nav-item">Access Codes</a>
+{% endblock %}
+{% block dash_content %}
+<div class="welcome-banner">
+  <div class="wb-text"><h2>Welcome, {{ current_user.display_name }}!</h2><p>School Dashboard</p></div>
+  
+</div>
+<div class="notice-banner notice-warning">Student data is <strong>private</strong> — only visible to assigned teachers and admins.</div>
+<div class="kpi-row">
+  <div class="kpi-card"><div class="kpi-num">{{ programs|length }}</div><div class="kpi-label">Programs</div></div>
+  <div class="kpi-card"><div class="kpi-num">{{ students|length }}</div><div class="kpi-label">Students</div></div>
+  <div class="kpi-card"><div class="kpi-num">{{ submissions|length }}</div><div class="kpi-label">Submissions</div></div>
+</div>
+<div class="sh-row"><div class="sh-title">Programs</div><a href="{{ url_for('school.create_program') }}" class="btn btn-primary btn-sm">+ New Program</a></div>
+{% for prog in programs %}
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div>
+      <div class="card-title">{{ prog.title }}</div>
+      <div class="card-meta">{{ prog.activities|length }} activities · Created {{ prog.created_at.strftime('%d %b %Y') }}</div>
+      {% if prog.description %}<div class="card-desc">{{ prog.description }}</div>{% endif %}
+    </div>
+    <div style="display:flex;gap:8px">
+      <a href="{{ url_for('school.create_activity', program_id=prog.id) }}" class="btn btn-ghost btn-sm">+ Activity</a>
+    </div>
+  </div>
+  {% for act in prog.activities %}
+  <div style="margin-top:12px;padding:10px 16px;background:var(--off-white);border-radius:8px;font-size:13px">
+    <strong>{{ act.title }}</strong>
+    {% if act.due_at %}<span style="color:var(--gray-400);margin-left:8px">Due {{ act.due_at.strftime('%d %b %Y') }}</span>{% endif %}
+    <span style="float:right;color:var(--komodo-blue);font-weight:600">{{ act.submissions|length }} submissions</span>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty">
+{% endfor %}
+<div class="sh-row" style="margin-top:32px"><div class="sh-title">Students ({{ students|length }})</div></div>
+{% for s in students %}
+<div class="card" style="padding:16px 20px">
+  <span style="font-weight:600">{{ s.display_name }}</span>
+  <span style="font-size:11px;color:var(--gray-400);margin-left:8px">Profile private</span>
+  <a href="{{ url_for('school.messages') }}" class="btn btn-ghost btn-sm" style="float:right">Message</a>
+</div>
+{% endfor %}
+{% endblock %}

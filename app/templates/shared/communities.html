@@ -1,0 +1,27 @@
+{% extends "shared/base.html" %}
+{% block title %}Communities — Komodo Hub{% endblock %}
+{% block content %}
+<div style="padding-top:68px">
+<section>
+  <div class="container">
+    <div class="section-label">Conservation Communities</div>
+    <div class="section-title">Active Communities</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:40px">
+      {% for c in communities %}
+      <div class="card">
+        
+        <div class="card-title">{{ c.name }}</div>
+        <span class="badge badge-community">Community</span>
+        <div class="card-meta" style="margin-top:8px">Active since {{ c.created_at.strftime('%B %Y') }}</div>
+      </div>
+      {% else %}
+      <div class="empty">
+      {% endfor %}
+    </div>
+    <div style="margin-top:48px;text-align:center">
+      <a href="{{ url_for('auth.register_community') }}" class="btn btn-large" style="background:var(--komodo-green);color:white">Join as Community →</a>
+    </div>
+  </div>
+</section>
+</div>
+{% endblock %}

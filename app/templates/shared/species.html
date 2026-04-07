@@ -1,0 +1,31 @@
+{% extends "shared/base.html" %}
+{% block title %}Species — Komodo Hub{% endblock %}
+{% block content %}
+<div style="padding-top:68px">
+<section>
+  <div class="container">
+    <div class="section-label">Conservation Database</div>
+    <div class="section-title">Indonesian Endangered Endemic Species</div>
+    <p style="color:var(--gray-600);font-size:15px;font-weight:300;margin-bottom:40px;max-width:600px">
+      Komodo Hub tracks Indonesia's most at-risk species. Schools and communities contribute sighting reports to help protect these animals.
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;margin-top:40px">
+      {% set colors = {'Critically Endangered':'#dc2626','Endangered':'#d97706','Vulnerable':'#0369a1'} %}
+      {% for sp in species %}
+      <div class="card" style="border-top:3px solid {{ colors.get(sp.conservation_status,'#999') }}">
+        
+        <div class="card-title">{{ sp.common_name }}</div>
+        <div class="card-meta" style="font-style:italic">{{ sp.scientific_name }}</div>
+        <span class="badge" style="margin-top:8px;background:{{ colors.get(sp.conservation_status,'#999') }}20;color:{{ colors.get(sp.conservation_status,'#999') }}">
+          {{ sp.conservation_status }}
+        </span>
+        {% if sp.description %}
+        <div class="card-desc" style="margin-top:10px;font-size:13px">{{ sp.description }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+</div>
+{% endblock %}

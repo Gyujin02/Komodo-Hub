@@ -1,0 +1,45 @@
+{% extends "shared/dashboard_base.html" %}
+{% block title %}Community Dashboard — Komodo Hub{% endblock %}
+{% set sidebar_label = 'Community' %}
+{% block sidebar_links %}
+<a href="{{ url_for('community.dashboard') }}" class="nav-item active">Overview</a>
+<a href="{{ url_for('community.report_sighting') }}" class="nav-item">Report Sighting</a>
+<a href="{{ url_for('community.library') }}" class="nav-item">Library</a>
+<a href="{{ url_for('community.accesscodes') }}" class="nav-item">Access Codes</a>
+{% endblock %}
+{% block dash_content %}
+<div class="welcome-banner" style="background:linear-gradient(135deg,var(--komodo-green),#005c3d)">
+  <div class="wb-text"><h2>Welcome, {{ current_user.display_name }}!</h2><p>Community Dashboard</p></div>
+  
+</div>
+<div class="notice-banner notice-success">Community library and sighting reports are <strong>PUBLIC</strong> — visible to everyone.</div>
+<div class="kpi-row">
+  <div class="kpi-card"><div class="kpi-num">{{ reports|length }}</div><div class="kpi-label">Sighting Reports</div></div>
+  <div class="kpi-card"><div class="kpi-num" style="color:var(--komodo-green)">{{ reports | selectattr('status','equalto','reviewed') | list | length }}</div><div class="kpi-label">Verified</div></div>
+  <div class="kpi-card"><div class="kpi-num">{{ species_list|length }}</div><div class="kpi-label">Species Tracked</div></div>
+  <div class="kpi-card"><div class="kpi-num">{{ schools|length }}</div><div class="kpi-label">Partner Schools</div></div>
+</div>
+<div class="sh-row">
+  <div class="sh-title">Recent Sighting Reports</div>
+  <a href="{{ url_for('community.report_sighting') }}" class="btn btn-primary btn-sm">+ New Report</a>
+</div>
+{% for report in reports[:5] %}
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div>
+      <div class="card-title">{{ report.title }}</div>
+      <div class="card-meta">
+        <strong>{{ report.species.common_name }}</strong>
+        <em style="color:var(--gray-400)"> ({{ report.species.scientific_name }})</em>
+        {% if report.location %}·  {{ report.location }}{% endif %}
+        · {{ report.created_at.strftime('%d %b %Y') }}
+      </div>
+      {% if report.notes %}<div class="card-desc">{{ report.notes }}</div>{% endif %}
+    </div>
+    <span class="badge {{ 'badge-approved' if report.status == 'reviewed' else 'badge-pending' }}">{{ report.status }}</span>
+  </div>
+</div>
+{% else %}
+<div class="empty">
+{% endfor %}
+{% endblock %}

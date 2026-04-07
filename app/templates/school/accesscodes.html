@@ -1,0 +1,66 @@
+{% extends "shared/dashboard_base.html" %}
+{% block title %}Access Codes — Komodo Hub{% endblock %}
+{% set sidebar_label = 'School' %}
+{% block sidebar_links %}
+<a href="{{ url_for('school.dashboard') }}" class="nav-item">Overview</a>
+<a href="{{ url_for('school.submissions') }}" class="nav-item">Submissions</a>
+<a href="{{ url_for('school.messages') }}" class="nav-item">Messages</a>
+<a href="{{ url_for('school.accesscodes') }}" class="nav-item active">Access Codes</a>
+{% endblock %}
+{% block dash_content %}
+<div class="dash-header">
+  <div><div class="dash-title">Access Codes</div><div class="dash-subtitle">Create codes for teachers and students to join</div></div>
+</div>
+<div class="notice-banner notice-info">
+  Access codes are stored as <strong>hashed values</strong>. Share the plain code with users — it cannot be recovered after creation.
+</div>
+<div class="card" style="margin-bottom:24px">
+  <div class="card-title" style="margin-bottom:16px">Create New Access Code</div>
+  <form method="POST" action="{{ url_for('school.create_accesscode') }}">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="form-group">
+        <label>Plain Code</label>
+        <input type="text" name="code" placeholder="e.g. TEACH2025" required>
+        <div class="form-hint">This is the code you share with users</div>
+      </div>
+      <div class="form-group">
+        <label>Role to Assign</label>
+        <select name="role_id">
+          {% for role in roles %}
+          <option value="{{ role.id }}">{{ role.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Max Uses</label>
+        <input type="number" name="max_uses" value="1" min="1" max="100">
+      </div>
+      <div class="form-group">
+        <label>Expires At (optional)</label>
+        <input type="date" name="expires_at">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Code →</button>
+  </form>
+</div>
+{% if codes %}
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Code (hashed)</th><th>Role</th><th>Uses</th><th>Expires</th><th>State</th></tr></thead>
+    <tbody>
+      {% for code in codes %}
+      <tr>
+        <td style="font-family:monospace;font-size:11px;color:var(--gray-400)">{{ code.code[:16] }}…</td>
+        <td><span class="badge badge-school">{{ code.role.name }}</span></td>
+        <td>{{ code.used_count }} / {{ code.max_uses }}</td>
+        <td style="font-size:12px">{{ code.expires_at.strftime('%d %b %Y') if code.expires_at else '—' }}</td>
+        <td><span class="badge {{ 'badge-approved' if code.state == 'active' else 'badge-pending' }}">{{ code.state }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty">
+{% endif %}
+{% endblock %}

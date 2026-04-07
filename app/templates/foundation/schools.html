@@ -1,0 +1,18 @@
+{% extends "shared/dashboard_base.html" %}
+{% set sidebar_label = 'Admin Console' %}
+{% block sidebar_links %}
+<a href="{{ url_for('foundation.dashboard') }}" class="nav-item">Overview</a>
+<a href="{{ url_for('foundation.schools') }}" class="nav-item {{ 'active' if 'schools' == 'schools' }}">Schools</a>
+<a href="{{ url_for('foundation.communities') }}" class="nav-item {{ 'active' if 'schools' == 'communities' }}">Communities</a>
+<a href="{{ url_for('foundation.users') }}" class="nav-item {{ 'active' if 'schools' == 'users' }}">All Users</a>
+<a href="{{ url_for('foundation.business_dashboard') }}" class="nav-item">Business Dashboard</a>
+<a href="{{ url_for('foundation.audit_log') }}" class="nav-item">Audit Log</a>
+{% endblock %}
+{% block dash_content %}
+<div class="dash-header"><div class="dash-title">{{ 'schools' | capitalize }}</div></div>
+<div class="table-wrap"><table><thead><tr><th>Name</th><th>State</th><th>Registered</th></tr></thead><tbody>
+{% for item in schools %}
+<tr><td style="font-weight:600">{{ item.name }}</td><td><span class="badge {{ 'badge-approved' if item.state=='active' else 'badge-pending' }}">{{ item.state }}</span></td><td style="font-size:12px;color:var(--gray-400)">{{ item.created_at.strftime('%d %b %Y') }}</td></tr>
+{% else %}<tr><td colspan="3" style="text-align:center;color:var(--gray-400)">None found</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

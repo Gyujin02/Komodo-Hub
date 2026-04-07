@@ -1,0 +1,49 @@
+{% extends "shared/dashboard_base.html" %}
+{% block title %}Access Codes — Komodo Hub{% endblock %}
+{% set sidebar_label = 'Community' %}
+{% block sidebar_links %}
+<a href="{{ url_for('community.dashboard') }}" class="nav-item">Overview</a>
+<a href="{{ url_for('community.report_sighting') }}" class="nav-item">Report Sighting</a>
+<a href="{{ url_for('community.library') }}" class="nav-item">Library</a>
+<a href="{{ url_for('community.accesscodes') }}" class="nav-item active">Access Codes</a>
+{% endblock %}
+{% block dash_content %}
+<div class="dash-header"><div><div class="dash-title">Access Codes</div><div class="dash-subtitle">Create codes for community members to join</div></div></div>
+<div class="card" style="margin-bottom:24px">
+  <div class="card-title" style="margin-bottom:16px">Create Access Code</div>
+  <form method="POST" action="{{ url_for('community.create_accesscode') }}">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="form-group"><label>Plain Code</label><input type="text" name="code" placeholder="e.g. COMM2025" required></div>
+      <div class="form-group">
+        <label>Role</label>
+        <select name="role_id">
+          {% for role in roles %}<option value="{{ role.id }}">{{ role.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="form-group"><label>Max Uses</label><input type="number" name="max_uses" value="1" min="1"></div>
+      <div class="form-group"><label>Expires At</label><input type="date" name="expires_at"></div>
+    </div>
+    <button type="submit" class="btn btn-primary" style="background:var(--komodo-green)">Create Code →</button>
+  </form>
+</div>
+{% if codes %}
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Code (hashed)</th><th>Role</th><th>Uses</th><th>Expires</th><th>State</th></tr></thead>
+    <tbody>
+      {% for code in codes %}
+      <tr>
+        <td style="font-family:monospace;font-size:11px;color:var(--gray-400)">{{ code.code[:16] }}…</td>
+        <td><span class="badge badge-community">{{ code.role.name }}</span></td>
+        <td>{{ code.used_count }} / {{ code.max_uses }}</td>
+        <td style="font-size:12px">{{ code.expires_at.strftime('%d %b %Y') if code.expires_at else '—' }}</td>
+        <td><span class="badge {{ 'badge-approved' if code.state == 'active' else 'badge-pending' }}">{{ code.state }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty">
+{% endif %}
+{% endblock %}

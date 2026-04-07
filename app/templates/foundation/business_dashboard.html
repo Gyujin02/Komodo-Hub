@@ -1,0 +1,33 @@
+{% extends "shared/dashboard_base.html" %}
+{% block title %}Business Dashboard — Komodo Hub{% endblock %}
+{% set sidebar_label = 'Admin Console' %}
+{% block sidebar_links %}
+<a href="{{ url_for('foundation.dashboard') }}" class="nav-item">Overview</a>
+<a href="{{ url_for('foundation.schools') }}" class="nav-item">Schools</a>
+<a href="{{ url_for('foundation.communities') }}" class="nav-item">Communities</a>
+<a href="{{ url_for('foundation.users') }}" class="nav-item">All Users</a>
+<a href="{{ url_for('foundation.business_dashboard') }}" class="nav-item active">Business Dashboard</a>
+<a href="{{ url_for('foundation.audit_log') }}" class="nav-item">Audit Log</a>
+{% endblock %}
+{% block dash_content %}
+<div class="dash-header"><div><div class="dash-title">Business Dashboard</div><div class="dash-subtitle">Anonymised aggregates only — no personal data</div></div></div>
+<div class="notice-banner notice-success">All data here is <strong>anonymised and aggregated</strong>. No personally identifiable information is shown.</div>
+<div class="kpi-row">
+  <div class="kpi-card"><div class="kpi-num">{{ stats.total_orgs }}</div><div class="kpi-label">Active Orgs</div></div>
+  <div class="kpi-card"><div class="kpi-num">{{ stats.total_sightings }}</div><div class="kpi-label">Sightings</div></div>
+  <div class="kpi-card"><div class="kpi-num">{{ stats.total_submissions }}</div><div class="kpi-label">Submissions</div></div>
+  <div class="kpi-card"><div class="kpi-num">{{ stats.total_programs }}</div><div class="kpi-label">Programs</div></div>
+  <div class="kpi-card"><div class="kpi-num">{{ stats.total_activities }}</div><div class="kpi-label">Activities</div></div>
+</div>
+<div class="sh-row"><div class="sh-title">Sightings by Species</div></div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Species</th><th>Reports</th></tr></thead>
+    <tbody>
+      {% for row in sightings_by_species %}
+      <tr><td style="font-weight:600">{{ row.common_name }}</td><td>{{ row.count }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

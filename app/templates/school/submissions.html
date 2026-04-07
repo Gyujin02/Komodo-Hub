@@ -1,0 +1,69 @@
+{% extends "shared/dashboard_base.html" %}
+{% block title %}Submissions — Komodo Hub{% endblock %}
+{% set sidebar_label = 'School' %}
+{% block sidebar_links %}
+<a href="{{ url_for('school.dashboard') }}" class="nav-item">Overview</a>
+<a href="{{ url_for('school.submissions') }}" class="nav-item active">Submissions</a>
+<a href="{{ url_for('school.messages') }}" class="nav-item">Messages</a>
+<a href="{{ url_for('school.accesscodes') }}" class="nav-item">Access Codes</a>
+{% endblock %}
+{% block dash_content %}
+<div class="dash-header">
+  <div>
+    <div class="dash-title">{% if role == 'student' %}My Submissions{% else %}Review Submissions{% endif %}</div>
+    <div class="dash-subtitle">
+      {% if role == 'student' %}Visibility: SENSITIVE — only you, your teacher, and admin can see this
+      {% else %}Visibility: SENSITIVE — student data protected{% endif %}
+    </div>
+  </div>
+</div>
+<div class="notice-banner notice-warning">
+  <strong>SENSITIVE</strong> — submissions are never exposed publicly. Student profiles are not disclosed.
+</div>
+{% if submissions %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        {% if role != 'student' %}<th>Student</th>{% endif %}
+        <th>Activity</th>
+        <th>State</th>
+        <th>Submitted</th>
+        <th>Content</th>
+        <th>Grade</th>
+        {% if role != 'student' %}<th>Action</th>{% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for sub in submissions %}
+      <tr>
+        {% if role != 'student' %}
+        <td><span style="font-weight:600">{{ sub.student.display_name }}</span></td>
+        {% endif %}
+        <td style="font-weight:600">{{ sub.activity.title }}</td>
+        <td><span class="badge {{ 'badge-approved' if sub.state == 'graded' else 'badge-submitted' if sub.state == 'submitted' else 'badge-draft' }}">{{ sub.state }}</span></td>
+        <td style="font-size:12px;color:var(--gray-400)">{{ sub.submitted_at.strftime('%d %b %Y') if sub.submitted_at else '—' }}</td>
+        <td style="font-size:12px;max-width:200px;color:var(--gray-600)">{{ sub.content[:80] + '…' if sub.content and sub.content|length > 80 else sub.content or '—' }}</td>
+        <td>
+          {% if sub.grade %}<span class="badge badge-approved">{{ sub.grade }}</span>
+          {% elif sub.feedback %}<span style="font-size:12px;color:var(--gray-400)">—</span>
+          {% else %}<span style="font-size:12px;color:var(--gray-400)">Pending</span>{% endif %}
+        </td>
+        {% if role != 'student' %}
+        <td>
+          <form method="POST" action="{{ url_for('school.grade_submission', sub_id=sub.id) }}" style="display:flex;gap:6px">
+            <input type="text" name="grade" value="{{ sub.grade or '' }}" placeholder="A/B/C" style="width:55px;padding:5px 8px;font-size:12px">
+            <input type="text" name="feedback" value="{{ sub.feedback or '' }}" placeholder="Feedback…" style="width:130px;padding:5px 8px;font-size:12px">
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+          </form>
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty">
+{% endif %}
+{% endblock %}

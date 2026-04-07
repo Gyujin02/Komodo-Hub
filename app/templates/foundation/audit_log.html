@@ -1,0 +1,33 @@
+{% extends "shared/dashboard_base.html" %}
+{% block title %}Audit Log — Komodo Hub{% endblock %}
+{% set sidebar_label = 'Admin Console' %}
+{% block sidebar_links %}
+<a href="{{ url_for('foundation.dashboard') }}" class="nav-item">Overview</a>
+<a href="{{ url_for('foundation.schools') }}" class="nav-item">Schools</a>
+<a href="{{ url_for('foundation.communities') }}" class="nav-item">Communities</a>
+<a href="{{ url_for('foundation.users') }}" class="nav-item">All Users</a>
+<a href="{{ url_for('foundation.business_dashboard') }}" class="nav-item">Business Dashboard</a>
+<a href="{{ url_for('foundation.audit_log') }}" class="nav-item active">Audit Log</a>
+{% endblock %}
+{% block dash_content %}
+<div class="dash-header"><div><div class="dash-title">Audit Log</div><div class="dash-subtitle">SENSITIVE — immutable, append-only record</div></div></div>
+<div class="notice-banner notice-info">All write and privilege-sensitive actions are logged here. This log is immutable.</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Time</th><th>Actor</th><th>Action</th><th>Target ID</th><th>Org</th></tr></thead>
+    <tbody>
+      {% for log in logs %}
+      <tr>
+        <td style="font-size:12px;color:var(--gray-400)">{{ log.created_at.strftime('%d %b %Y %H:%M') }}</td>
+        <td style="font-weight:600">{{ log.actor.display_name }}</td>
+        <td><span class="badge badge-school" style="font-family:monospace">{{ log.action }}</span></td>
+        <td style="font-size:12px">{{ log.target_id or '—' }}</td>
+        <td style="font-size:12px">{{ log.organization.name if log.organization else '—' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" style="text-align:center;color:var(--gray-400)">No audit events yet</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

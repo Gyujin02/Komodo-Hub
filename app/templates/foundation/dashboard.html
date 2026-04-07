@@ -1,0 +1,69 @@
+{% extends "shared/dashboard_base.html" %}
+{% block title %}Foundation Admin — Komodo Hub{% endblock %}
+{% set sidebar_label = 'Admin Console' %}
+{% block sidebar_links %}
+<a href="{{ url_for('foundation.dashboard') }}" class="nav-item active">Overview</a>
+<a href="{{ url_for('foundation.schools') }}" class="nav-item">Schools</a>
+<a href="{{ url_for('foundation.communities') }}" class="nav-item">Communities</a>
+<a href="{{ url_for('foundation.users') }}" class="nav-item">All Users</a>
+<a href="{{ url_for('foundation.business_dashboard') }}" class="nav-item">Business Dashboard</a>
+<a href="{{ url_for('foundation.audit_log') }}" class="nav-item">Audit Log</a>
+{% endblock %}
+{% block dash_content %}
+<div class="dash-header"><div><div class="dash-title">Yayasan Komodo — Admin</div><div class="dash-subtitle">Platform oversight, approvals and governance</div></div></div>
+<div class="kpi-row">
+  <div class="kpi-card"><div class="kpi-num">{{ stats.total_schools }}</div><div class="kpi-label">Total Schools</div></div>
+  <div class="kpi-card"><div class="kpi-num" style="color:var(--komodo-green)">{{ stats.approved_schools }}</div><div class="kpi-label">Approved</div></div>
+  <div class="kpi-card"><div class="kpi-num" style="color:#d97706">{{ stats.pending_count }}</div><div class="kpi-label">Pending</div></div>
+  <div class="kpi-card"><div class="kpi-num">{{ stats.communities }}</div><div class="kpi-label">Communities</div></div>
+  <div class="kpi-card"><div class="kpi-num">{{ stats.total_users }}</div><div class="kpi-label">Users</div></div>
+  <div class="kpi-card"><div class="kpi-num">{{ stats.audit_count }}</div><div class="kpi-label">Audit Events</div></div>
+</div>
+<div class="sh-row"><div class="sh-title">Pending Approvals</div></div>
+{% if pending %}
+  {% for org in pending %}
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <div class="card-title">{{ org.name }}</div>
+        <span class="badge badge-pending">Pending</span>
+        <span style="font-size:12px;color:var(--gray-400);margin-left:8px">{{ org.type }} · Registered {{ org.created_at.strftime('%d %b %Y') }}</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <form method="POST" action="{{ url_for('foundation.approve_org', org_id=org.id) }}" style="display:inline">
+          <button type="submit" class="btn btn-success-fill btn-sm">Approve</button>
+        </form>
+        <form method="POST" action="{{ url_for('foundation.reject_org', org_id=org.id) }}" style="display:inline">
+          <button type="submit" class="btn btn-sm" style="background:#dc3545;color:white" onclick="return confirm('Reject {{ org.name }}?')"> Reject</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+<div class="empty">
+{% endif %}
+<div class="sh-row" style="margin-top:32px"><div class="sh-title">All Organisations</div></div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Name</th><th>Type</th><th>Status</th><th>Registered</th><th>Action</th></tr></thead>
+    <tbody>
+      {% for org in all_orgs %}
+      <tr>
+        <td style="font-weight:600">{{ org.name }}</td>
+        <td><span class="badge badge-{{ 'school' if org.type=='school' else 'community' if org.type=='community' else 'foundation' }}">{{ org.type }}</span></td>
+        <td><span class="badge {{ 'badge-approved' if org.state=='active' else 'badge-pending' if org.state=='pending' else 'badge-rejected' }}">{{ org.state }}</span></td>
+        <td style="font-size:12px;color:var(--gray-400)">{{ org.created_at.strftime('%d %b %Y') }}</td>
+        <td>
+          {% if org.state == 'pending' %}
+          <form method="POST" action="{{ url_for('foundation.approve_org', org_id=org.id) }}" style="display:inline">
+            <button type="submit" class="btn btn-success-fill btn-sm">Approve</button>
+          </form>
+          {% else %}—{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "shared/dashboard_base.html" %}
+{% block title %}Student Dashboard — Komodo Hub{% endblock %}
+{% set sidebar_label = 'School' %}
+{% block sidebar_links %}
+<a href="{{ url_for('school.dashboard') }}" class="nav-item active">Overview</a>
+<a href="{{ url_for('school.submissions') }}" class="nav-item">My Submissions</a>
+<a href="{{ url_for('school.messages') }}" class="nav-item">Messages</a>
+{% endblock %}
+{% block dash_content %}
+<div class="welcome-banner">
+  <div class="wb-text"><h2>Welcome, {{ current_user.display_name }}!</h2><p>Student Dashboard</p></div>
+  
+</div>
+<div class="kpi-row">
+  <div class="kpi-card"><div class="kpi-num">{{ assignments|length }}</div><div class="kpi-label">Programs</div></div>
+  <div class="kpi-card"><div class="kpi-num">{{ submissions|length }}</div><div class="kpi-label">Submitted</div></div>
+</div>
+<div class="sh-row"><div class="sh-title">My Programs</div></div>
+{% for assign in assignments %}
+{% set prog = assign.program %}
+<div class="card">
+  <div class="card-title">{{ prog.title }}</div>
+  {% if prog.description %}<div class="card-desc">{{ prog.description }}</div>{% endif %}
+  {% for act in prog.activities %}
+  {% set my_sub = submissions | selectattr('activity_id', 'equalto', act.id) | list | first %}
+  <div style="margin-top:12px;padding:12px 16px;background:var(--off-white);border-radius:8px;display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div style="font-size:13px;font-weight:600">{{ act.title }}</div>
+      {% if act.due_at %}<div style="font-size:11px;color:var(--gray-400)">Due {{ act.due_at.strftime('%d %b %Y') }}</div>{% endif %}
+      {% if my_sub and my_sub.feedback %}
+      <div style="font-size:12px;color:var(--komodo-green);margin-top:4px">{{ my_sub.feedback }}</div>
+      {% endif %}
+    </div>
+    <div>
+      {% if my_sub %}
+        <span class="badge badge-approved">Submitted</span>
+        {% if my_sub.grade %}<span style="margin-left:6px;font-weight:700;color:var(--komodo-blue)">{{ my_sub.grade }}</span>{% endif %}
+      {% else %}
+        <a href="{{ url_for('school.submit_activity', activity_id=act.id) }}" class="btn btn-primary btn-sm">Submit →</a>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty">
+{% endfor %}
+{% endblock %}
