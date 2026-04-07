@@ -40,7 +40,12 @@ The final prototype uses SQLite for easier local setup, testing, and demonstrati
 - Python 3
 
 ## Installation
+
+py -m venv venv
 ```bash
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\venv\Scripts\Activate.ps1
+
 pip install -r requirements.txt
 
 # Run
