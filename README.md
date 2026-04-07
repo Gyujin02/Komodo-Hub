@@ -56,34 +56,3 @@ schooladmin@school.com / password123
 teacher@school.com / password123
 student@school.com / password123
 community@komodo.com / password123
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
