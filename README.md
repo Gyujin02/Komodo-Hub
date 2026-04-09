@@ -55,9 +55,9 @@ py app.py
 http://127.0.0.1:5000
 
 # Demo Accounts
-admin@komodo.com / password123
-principal@school.com / password123
-schooladmin@school.com / password123
-teacher@school.com / password123
-student@school.com / password123
-community@komodo.com / password123
+admin@yayasankomodo.org · password123
+principal@ujungraya.sch.id · password123
+admin@ujungraya.sch.id · password123
+teacher@ujungraya.sch.id · password123
+student@ujungraya.sch.id · password123
+chairman@saveouranimals.org · password123
